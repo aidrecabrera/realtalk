@@ -26,7 +26,7 @@ const router = createRouter({
 	context: {
 		queryClient,
 		supabaseClient,
-		supabaseUser: undefined!, // TODO: define properly
+		supabaseUser: undefined,
 		authentication: undefined!,
 	},
 });
