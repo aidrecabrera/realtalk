@@ -1,6 +1,5 @@
 // ? External libraries
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
@@ -8,14 +7,19 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 // ? Routes
-import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { routeTree } from "./routeTree.gen";
 
 // ! use only devtools for development
+import { SupabaseClient } from "@/services/SupabaseClient";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { AuthProvider } from "./auth/AuthProvider";
+import { useAuth } from "./hooks/useAuthentication";
+import { useSupabaseUser } from "./hooks/useSupabaseUser";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
+export const supabaseClient = SupabaseClient();
 
 const router = createRouter({
 	routeTree,
@@ -41,10 +45,10 @@ function ApplicationEntry() {
 		<RouterProvider
 			router={router}
 			context={{
-				queryClient,
-				supabaseClient,
-				supabaseUser,
-				authentication,
+				queryClient: queryClient,
+				supabaseClient: supabaseClient,
+				supabaseUser: supabaseUser,
+				authentication: authentication,
 			}}
 			defaultPreload="intent"
 			// ! test if these solves the FOUC issue
@@ -60,9 +64,11 @@ if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<QueryClientProvider client={queryClient}>
+			<AuthProvider>
 			<StrictMode>
 				<ApplicationEntry />
 			</StrictMode>
+			</AuthProvider>
 			<ReactQueryDevtools initialIsOpen={false} />
 			<TanStackRouterDevtools router={router} initialIsOpen={false} />
 		</QueryClientProvider>

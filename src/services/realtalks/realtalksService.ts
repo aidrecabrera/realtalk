@@ -1,27 +1,25 @@
+import { supabaseClient } from "@/app";
+import { TTable } from "@/types/schema.types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useSupabaseClient } from "../shared/useSupabaseClient";
-import { TableType } from "@/types/types";
 
-export const fetchAllRt = () => {
+export const usePetchAllRt = () => {
   return useQuery({
     queryKey: ["fetchAllRt"],
     queryFn: async () => {
-      const supabase = useSupabaseClient();
-      let { data: realtalks, error } = await supabase
+      const { data: realtalks, error } = await supabaseClient
         .from("realtalks")
         .select("*")
         .neq("type", "REPLY");
       if (error) throw error;
-      return realtalks as TableType<"realtalks">[];
+      return realtalks as TTable<"realtalks">[];
     },
   });
 };
 
-export const postRealtalk = () => {
+export const usePostRealtalk = () => {
   return useMutation({
-    mutationFn: async (payload: Partial<TableType<"realtalks">>) => {
-      const supabase = useSupabaseClient();
-      const { error } = await supabase
+    mutationFn: async (payload: Partial<TTable<"realtalks">>) => {
+      const { error } = await supabaseClient
         .from("realtalks")
         .insert(payload as never);
       if (error) throw error;

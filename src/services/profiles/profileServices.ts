@@ -1,5 +1,5 @@
-import { supabaseClient } from "@/main";
-import { TableType } from "@/types/types";
+import { supabaseClient } from "@/app";
+import { TTable } from "@/types/schema.types";
 import { queryOptions } from "@tanstack/react-query";
 
 export const profilesQueryOptions = () => {
@@ -10,7 +10,7 @@ export const profilesQueryOptions = () => {
         .from("profiles")
         .select("*");
       if (error) throw error;
-      return profilesData as TableType<"profiles">[];
+      return profilesData as TTable<"profiles">[];
     },
   });
 };
@@ -25,7 +25,7 @@ export const profileQueryOptions = (handler: string) => {
         .eq("realtalk_handle", handler)
         .single();
       if (error) throw error;
-      return profilesData as TableType<"profiles">;
+      return profilesData as TTable<"profiles">;
     },
   });
 };

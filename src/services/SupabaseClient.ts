@@ -1,5 +1,8 @@
 import { Database } from "@/types/database.types";
-import { createClient, SupabaseClient as TSupabaseClient } from '@supabase/supabase-js';
+import {
+	createClient,
+	SupabaseClient as TSupabaseClient,
+} from "@supabase/supabase-js";
 
 export const supabase = createClient<Database>(
 	import.meta.env.VITE_SUPABASE_URL ?? "",
@@ -7,5 +10,5 @@ export const supabase = createClient<Database>(
 );
 
 export const SupabaseClient = <T>() => {
-  return supabase as TSupabaseClient<T>;
-}
+	return supabase as TSupabaseClient<T>;
+};
