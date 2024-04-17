@@ -1,3 +1,9 @@
 # Ignore artifacts:
 build
 coverage
+node_modules
+npm-debug.log
+
+# add all necessary files to ignore for formatting
+*.DS_Store
+*.log
