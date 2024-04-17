@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./index.css";
+import ReactDOM from "react-dom/client";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { StrictMode } from "react";
+import { routeTree } from "./routeTree.gen";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-function App() {
-  const [count, setCount] = useState(0)
+// ! use only devtools for development
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+const queryClient = new QueryClient();
+
+const router = createRouter({
+	routeTree,
+	context: {
+		// TODO: add all the necessary contexts
+		queryClient,
+	},
+});
+
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: typeof router;
+	}
 }
 
-export default App
+function ApplicationEntry() {
+	// TODO: add all the necessary contexts initialization
+	return (
+		<RouterProvider
+			router={router}
+			context={{
+				// TODO: add all the necessary contexts here as well
+				queryClient,
+			}}
+			defaultPreload="intent"
+			// ! test if these solves the FOUC issue
+			// ? defaultPendingMs={0}
+			// ? defaultPendingMinMs={500}
+		/>
+	);
+}
+
+// TODO: future aidre, remind me to create the auth provider
+const rootElement = document.getElementById("app")!;
+if (!rootElement.innerHTML) {
+	const root = ReactDOM.createRoot(rootElement);
+	root.render(
+		<QueryClientProvider client={queryClient}>
+			<StrictMode>
+				<ApplicationEntry />
+			</StrictMode>
+			<ReactQueryDevtools initialIsOpen={false} />
+			<TanStackRouterDevtools router={router} initialIsOpen={false} />
+		</QueryClientProvider>
+	);
+}
