@@ -1,7 +1,13 @@
-import "./index.css";
-import ReactDOM from "react-dom/client";
+// ? External libraries
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
+import ReactDOM from "react-dom/client";
+
+// ? Styles
+import "./index.css";
+
+// ? Routes
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -14,8 +20,10 @@ const queryClient = new QueryClient();
 const router = createRouter({
 	routeTree,
 	context: {
-		// TODO: add all the necessary contexts
 		queryClient,
+		supabaseClient,
+		supabaseUser: undefined!, // TODO: define properly
+		authentication: undefined!,
 	},
 });
 
@@ -25,14 +33,18 @@ declare module "@tanstack/react-router" {
 	}
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ApplicationEntry() {
-	// TODO: add all the necessary contexts initialization
+	const supabaseUser = useSupabaseUser();
+	const authentication = useAuth();
 	return (
 		<RouterProvider
 			router={router}
 			context={{
-				// TODO: add all the necessary contexts here as well
 				queryClient,
+				supabaseClient,
+				supabaseUser,
+				authentication,
 			}}
 			defaultPreload="intent"
 			// ! test if these solves the FOUC issue
