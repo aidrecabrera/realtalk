@@ -1,10 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
 	:root {
-		--background: 170 0% 100%;
+		--background: 48 56% 98%;
 		--foreground: 198.14 100% 8.43%;
 		--muted: 117.74 0% 90.77%;
 		--muted-foreground: 253 13% 37%;
@@ -14,8 +16,8 @@
 		--card-foreground: 0 0% 0%;
 		--border: 198.14 100% 8.43%;
 		--input: 198.14 100% 8.43%;
-		--primary: 153.87 100% 31.96%;
-		--primary-foreground: 198.14 0% 100%;
+		--primary: 145 100% 46%;
+		--primary-foreground: 198.14 100% 8.43%;
 		--secondary: 150 20% 98.04%;
 		--secondary-foreground: 253 5% 29%;
 		--accent: 156 12.2% 91.96%;
@@ -23,7 +25,11 @@
 		--destructive: 0 70.37% 52.35%;
 		--destructive-foreground: 0 0% 100%;
 		--ring: 214.25 99.2% 48.82%;
-		--radius: 0.5rem;
+		--sunglow: 202 97% 47%;
+		--sunglow-foreground: 198.14 0% 100%;
+		--ocean: 214 99% 49%;
+		--ocean-foreground: 198.14 0% 75%;
+		--radius: 0.25rem;
 	}
 
 	.dark {
@@ -37,7 +43,7 @@
 		--card-foreground: 253 31% 99%;
 		--border: 200 18.12% 29.22%;
 		--input: 215 27.9% 16.9%;
-		--primary: 153.87 100% 31.96%;
+		--primary: 145 100% 46%;
 		--primary-foreground: 198.14 0% 100%;
 		--secondary: 201.6 11.96% 40.98%;
 		--secondary-foreground: 253 0% 100%;
@@ -46,14 +52,44 @@
 		--destructive: 0 70.37% 52.35%;
 		--destructive-foreground: 0 0% 100%;
 		--ring: 217.06 89.47% 29.8%;
+		--sunglow: 44 100% 50%;
 	}
 }
 
 @layer base {
 	* {
-		@apply border-border;
+		@apply border-border font-inter;
 	}
 	body {
 		@apply bg-background text-foreground;
 	}
+	.parent {
+		@apply w-full;
+	}
+	.page {
+		@apply container flex flex-col pt-4;
+	}
+	::selection {
+		@apply bg-ocean text-primary-foreground;
+	}
+}
+
+/* This will affect the scrollbar in Chrome, Safari and Edge */
+::-webkit-scrollbar {
+	width: thin;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.175);
+	border-radius: 5px;
+}
+
+/* This will affect the scrollbar in Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.175) transparent;
 }

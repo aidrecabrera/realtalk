@@ -13,61 +13,114 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PublicImport } from './routes/_public'
-import { Route as AuthenticateImport } from './routes/_authenticate'
-import { Route as AdminImport } from './routes/_admin'
+import { Route as ViewPublicImport } from './routes/_view-public'
+import { Route as ViewIndexImport } from './routes/_view-index'
+import { Route as ViewAuthenticateImport } from './routes/_view-authenticate'
+import { Route as ViewAdminImport } from './routes/_view-admin'
+import { Route as ViewPublicCommunitiesIndexImport } from './routes/_view-public/communities/index'
+import { Route as ViewPublicCommunitiesProfileIndexImport } from './routes/_view-public/communities/$profile/index'
+import { Route as ViewPublicCommunitiesProfileTypeIndexImport } from './routes/_view-public/communities/$profile/$type/index'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute('/')()
+const ViewIndexIndexLazyImport = createFileRoute('/_view-index/')()
 
 // Create/Update Routes
 
-const PublicRoute = PublicImport.update({
-  id: '/_public',
+const ViewPublicRoute = ViewPublicImport.update({
+  id: '/_view-public',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthenticateRoute = AuthenticateImport.update({
-  id: '/_authenticate',
+const ViewIndexRoute = ViewIndexImport.update({
+  id: '/_view-index',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AdminRoute = AdminImport.update({
-  id: '/_admin',
+const ViewAuthenticateRoute = ViewAuthenticateImport.update({
+  id: '/_view-authenticate',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexLazyRoute = IndexLazyImport.update({
+const ViewAdminRoute = ViewAdminImport.update({
+  id: '/_view-admin',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ViewIndexIndexLazyRoute = ViewIndexIndexLazyImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+  getParentRoute: () => ViewIndexRoute,
+} as any).lazy(() =>
+  import('./routes/_view-index/index.lazy').then((d) => d.Route),
+)
+
+const ViewPublicCommunitiesIndexRoute = ViewPublicCommunitiesIndexImport.update(
+  {
+    path: '/communities/',
+    getParentRoute: () => ViewPublicRoute,
+  } as any,
+)
+
+const ViewPublicCommunitiesProfileIndexRoute =
+  ViewPublicCommunitiesProfileIndexImport.update({
+    path: '/communities/$profile/',
+    getParentRoute: () => ViewPublicRoute,
+  } as any)
+
+const ViewPublicCommunitiesProfileTypeIndexRoute =
+  ViewPublicCommunitiesProfileTypeIndexImport.update({
+    path: '/communities/$profile/$type/',
+    getParentRoute: () => ViewPublicRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      preLoaderRoute: typeof IndexLazyImport
+    '/_view-admin': {
+      preLoaderRoute: typeof ViewAdminImport
       parentRoute: typeof rootRoute
     }
-    '/_admin': {
-      preLoaderRoute: typeof AdminImport
+    '/_view-authenticate': {
+      preLoaderRoute: typeof ViewAuthenticateImport
       parentRoute: typeof rootRoute
     }
-    '/_authenticate': {
-      preLoaderRoute: typeof AuthenticateImport
+    '/_view-index': {
+      preLoaderRoute: typeof ViewIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_public': {
-      preLoaderRoute: typeof PublicImport
+    '/_view-public': {
+      preLoaderRoute: typeof ViewPublicImport
       parentRoute: typeof rootRoute
+    }
+    '/_view-index/': {
+      preLoaderRoute: typeof ViewIndexIndexLazyImport
+      parentRoute: typeof ViewIndexImport
+    }
+    '/_view-public/communities/': {
+      preLoaderRoute: typeof ViewPublicCommunitiesIndexImport
+      parentRoute: typeof ViewPublicImport
+    }
+    '/_view-public/communities/$profile/': {
+      preLoaderRoute: typeof ViewPublicCommunitiesProfileIndexImport
+      parentRoute: typeof ViewPublicImport
+    }
+    '/_view-public/communities/$profile/$type/': {
+      preLoaderRoute: typeof ViewPublicCommunitiesProfileTypeIndexImport
+      parentRoute: typeof ViewPublicImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  ViewIndexRoute.addChildren([ViewIndexIndexLazyRoute]),
+  ViewPublicRoute.addChildren([
+    ViewPublicCommunitiesIndexRoute,
+    ViewPublicCommunitiesProfileIndexRoute,
+    ViewPublicCommunitiesProfileTypeIndexRoute,
+  ]),
+])
 
 /* prettier-ignore-end */

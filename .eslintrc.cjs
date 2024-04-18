@@ -1,5 +1,9 @@
 module.exports = {
 	root: true,
+	parserOptions: {
+		ecmaVersion: 2020,
+		sourceType: "script",
+	},
 	env: { browser: true, es2020: true },
 	extends: [
 		"eslint:recommended",
