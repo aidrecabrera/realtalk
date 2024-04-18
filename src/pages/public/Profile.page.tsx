@@ -1,6 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { profileRoutes } from "@/constants/profileRoutes";
 import { Route } from "@/routes/_view-public/communities/$profile";
 import { profileQueryOptions } from "@/services/profiles/profileServices";
@@ -14,7 +22,7 @@ export const image =
 
 function Profile() {
 	const { profile: handler } = Route.useParams();
-	const { data: profile } = useSuspenseQuery(profileQueryOptions(handler));
+	const { data: profile } = useSuspenseQuery(profileQueryOptions("piratedfw"));
 	const { entity_name, fb_page } = profile as TTable<"profiles">;
 	if (!profile) {
 		return <h1 className="animate-pulse">Loading...</h1>;
@@ -31,7 +39,7 @@ function Profile() {
 						<div className="flex flex-col gap-2">
 							<h1 className="text-3xl font-bold">{entity_name}</h1>
 							<div className="flex flex-row gap-1">
-								<Badge className="text-xs">{"@" + handler}</Badge>
+								<Badge className="text-xs">{"@" + "TEST"}</Badge>
 								<Badge
 									variant="outline"
 									className="text-xs border-primary text-primary"
@@ -60,30 +68,46 @@ function Profile() {
 					</div>
 				</CardFooter>
 			</Card>
-			{profileRoutes.map(
-				({ Icon, MessageRoute, MessageSample, MessageType }, index) => {
-					return (
-						<Link
-							to="/communities/$profile/$type"
-							params={{
-								profile: handler,
-								type: MessageRoute,
-							}}
-							className="w-full max-w-lg"
-						>
-							<Card key={index} className="container w-full">
-								<div className="flex flex-row items-center py-8">
-									<Icon size={50} className="mr-6" />
-									<div>
-										<h1 className="font-medium text-body">{MessageType}</h1>
-										<p>{MessageSample}</p>
-									</div>
-								</div>
-							</Card>
-						</Link>
-					);
-				}
-			)}
+			{/* TODO BAD IMPLEMENTATION, THERE IS A BETTER WAY. I WILL REVISE THIS. GOTTA REST THOUGH MY STOMACH HURTS AS FUCK! */}
+			<div className="w-full max-w-lg">
+				<div className="flex flex-col w-full gap-4">
+					{profileRoutes.map(({ Icon, MessageSample, MessageType }, index) => {
+						return (
+							<Dialog>
+								<Link
+									search={{
+										send: { MessageType },
+									}}
+									key={index}
+								>
+									<DialogTrigger className="w-full">
+										<Card className="container max-w-lg">
+											<div className="flex flex-row items-center py-8">
+												<Icon size={50} className="mr-6" />
+												<div className="flex flex-col items-start">
+													<h1 className="font-medium text-body">
+														{MessageType}
+													</h1>
+													<p>{MessageSample}</p>
+												</div>
+											</div>
+										</Card>
+									</DialogTrigger>
+								</Link>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle>Are you absolutely sure? {index}</DialogTitle>
+										<DialogDescription>
+											This action cannot be undone. This will permanently delete
+											your account and remove your data from our servers.
+										</DialogDescription>
+									</DialogHeader>
+								</DialogContent>
+							</Dialog>
+						);
+					})}
+				</div>
+			</div>
 		</div>
 	);
 }

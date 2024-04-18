@@ -18,8 +18,7 @@ import { Route as ViewIndexImport } from './routes/_view-index'
 import { Route as ViewAuthenticateImport } from './routes/_view-authenticate'
 import { Route as ViewAdminImport } from './routes/_view-admin'
 import { Route as ViewPublicCommunitiesIndexImport } from './routes/_view-public/communities/index'
-import { Route as ViewPublicCommunitiesProfileIndexImport } from './routes/_view-public/communities/$profile/index'
-import { Route as ViewPublicCommunitiesProfileTypeIndexImport } from './routes/_view-public/communities/$profile/$type/index'
+import { Route as ViewPublicCommunitiesProfileImport } from './routes/_view-public/communities/$profile'
 
 // Create Virtual Routes
 
@@ -61,15 +60,9 @@ const ViewPublicCommunitiesIndexRoute = ViewPublicCommunitiesIndexImport.update(
   } as any,
 )
 
-const ViewPublicCommunitiesProfileIndexRoute =
-  ViewPublicCommunitiesProfileIndexImport.update({
-    path: '/communities/$profile/',
-    getParentRoute: () => ViewPublicRoute,
-  } as any)
-
-const ViewPublicCommunitiesProfileTypeIndexRoute =
-  ViewPublicCommunitiesProfileTypeIndexImport.update({
-    path: '/communities/$profile/$type/',
+const ViewPublicCommunitiesProfileRoute =
+  ViewPublicCommunitiesProfileImport.update({
+    path: '/communities/$profile',
     getParentRoute: () => ViewPublicRoute,
   } as any)
 
@@ -97,16 +90,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ViewIndexIndexLazyImport
       parentRoute: typeof ViewIndexImport
     }
+    '/_view-public/communities/$profile': {
+      preLoaderRoute: typeof ViewPublicCommunitiesProfileImport
+      parentRoute: typeof ViewPublicImport
+    }
     '/_view-public/communities/': {
       preLoaderRoute: typeof ViewPublicCommunitiesIndexImport
-      parentRoute: typeof ViewPublicImport
-    }
-    '/_view-public/communities/$profile/': {
-      preLoaderRoute: typeof ViewPublicCommunitiesProfileIndexImport
-      parentRoute: typeof ViewPublicImport
-    }
-    '/_view-public/communities/$profile/$type/': {
-      preLoaderRoute: typeof ViewPublicCommunitiesProfileTypeIndexImport
       parentRoute: typeof ViewPublicImport
     }
   }
@@ -117,9 +106,8 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   ViewIndexRoute.addChildren([ViewIndexIndexLazyRoute]),
   ViewPublicRoute.addChildren([
+    ViewPublicCommunitiesProfileRoute,
     ViewPublicCommunitiesIndexRoute,
-    ViewPublicCommunitiesProfileIndexRoute,
-    ViewPublicCommunitiesProfileTypeIndexRoute,
   ]),
 ])
 
