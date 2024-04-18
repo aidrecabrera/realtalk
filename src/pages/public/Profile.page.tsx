@@ -45,15 +45,14 @@ function Profile() {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const navigate = useNavigate({ from: Route.fullPath });
 	useEffect(() => {
-		if (!open) {
+		if (!open && !option) {
 			navigate({
 				search: {
 					send: undefined,
 				},
 			});
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [option]);
+	}, [navigate, open, option]);
 	if (!profile) {
 		return <h1 className="animate-pulse">Loading...</h1>;
 	}
