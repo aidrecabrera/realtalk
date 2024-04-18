@@ -26,7 +26,7 @@ export const profileRoutes: TProfileRoute[] = [
 	{
 		Icon: UserSound,
 		MessageType: "Rant",
-		MessageSample: "Vent-out about anything bothering you!",
+		MessageSample: "Rant about anything bothering you!",
 		MessageRoute: "rant",
 	},
 ];
