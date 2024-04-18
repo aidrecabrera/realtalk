@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -19,17 +19,19 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
+import { label_constant } from "@/constants/global";
 import { profileRoutes } from "@/constants/profileRoutes";
+import { cn } from "@/lib/utils";
 import {
 	Route,
 	TSendOptionsSchema,
 } from "@/routes/_view-public/communities/$profile";
 import { profileQueryOptions } from "@/services/profiles/profileServices";
 import { TTable } from "@/types/schema.types";
-import { FacebookLogo, Share } from "@phosphor-icons/react";
+import { FacebookLogo, LockKey, Share } from "@phosphor-icons/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { z } from "zod";
 
@@ -39,20 +41,28 @@ export const image =
 function Profile() {
 	const { send: option }: { send: z.infer<typeof TSendOptionsSchema> } =
 		Route.useSearch();
-	const { data: profile } = useSuspenseQuery(profileQueryOptions("piratedfw"));
+	const { profile: handler } = Route.useParams();
+	const { data: profile } = useSuspenseQuery(profileQueryOptions(handler));
 	const { entity_name, fb_page } = profile as TTable<"profiles">;
-	const [open, setOpen] = useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const navigate = useNavigate({ from: Route.fullPath });
-	useEffect(() => {
-		if (!open && !option) {
+
+	const [prevLabel, setPrevLabel] = useState<string | undefined>();
+	const setLabel = (open: boolean) => {
+		if (option) {
+			setPrevLabel((option as string).toTitleCase());
+		}
+		if (!open) {
 			navigate({
 				search: {
 					send: undefined,
 				},
 			});
+			return false;
 		}
-	}, [navigate, open, option]);
+		return true;
+	};
+
 	if (!profile) {
 		return <h1 className="animate-pulse">Loading...</h1>;
 	}
@@ -100,9 +110,9 @@ function Profile() {
 			<div className="flex flex-col w-full max-w-lg gap-4">
 				<SendDialog
 					isDesktop={isDesktop}
-					open={open}
-					setOpen={setOpen}
-					label={option ? (option as string).toTitleCase() : "Message"}
+					setLabel={setLabel}
+					label={option ? (option as string).toTitleCase() : undefined}
+					prevLabel={prevLabel}
 				/>
 			</div>
 		</div>
@@ -136,22 +146,29 @@ function SendDialogOptions() {
 
 type TSendDialogProps = {
 	isDesktop: boolean;
-	open: boolean;
-	setOpen: (open: boolean) => void;
-	label: string;
+	label: string | undefined;
+	prevLabel: string | undefined;
+	setLabel: (open: boolean) => boolean;
+	className?: string | undefined;
 };
 
-function SendDialog({ isDesktop, open, setOpen, label }: TSendDialogProps) {
+function SendDialog({
+	isDesktop,
+	label,
+	prevLabel,
+	className,
+	setLabel,
+}: TSendDialogProps) {
 	if (isDesktop) {
 		return (
-			<Dialog open={open} onOpenChange={setOpen}>
+			<Dialog open={!!label} onOpenChange={setLabel}>
 				<SendDialogOptions />
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent hideCloseButton className={cn("max-w-2xl", className)}>
 					<DialogHeader>
-						<DialogTitle>{label}</DialogTitle>
-						<DialogDescription>
-							Make changes to your profile here. Click save when you're done.
-						</DialogDescription>
+						<DialogTitle>{label ? label : prevLabel}</DialogTitle>
+						<DialogFooter>
+							<PrivacyStatement />
+						</DialogFooter>
 					</DialogHeader>
 				</DialogContent>
 			</Dialog>
@@ -159,24 +176,36 @@ function SendDialog({ isDesktop, open, setOpen, label }: TSendDialogProps) {
 	}
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
+		<Drawer open={!!label} onOpenChange={setLabel}>
 			<DrawerTrigger asChild>
 				<SendDialogOptions />
 			</DrawerTrigger>
-			<DrawerContent>
+			<DrawerContent className={cn(className)}>
 				<DrawerHeader className="text-left">
-					<DrawerTitle>{label}</DrawerTitle>
+					<DrawerTitle>{label ? label : prevLabel}</DrawerTitle>
 					<DrawerDescription>
 						Make changes to your profile here. Click save when you're done.
 					</DrawerDescription>
 				</DrawerHeader>
 				<DrawerFooter className="pt-2">
+					<PrivacyStatement />
 					<DrawerClose asChild>
 						<Button variant="outline">Cancel</Button>
 					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
+	);
+}
+
+function PrivacyStatement() {
+	return (
+		<div className="flex flex-row items-center justify-center w-full">
+			<p className="flex flex-row items-end justify-center">
+				<LockKey className="mr-1" size={20} />
+				<span className="text-sm">{label_constant.privacy_statement}</span>
+			</p>
+		</div>
 	);
 }
 
