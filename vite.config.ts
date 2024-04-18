@@ -1,13 +1,18 @@
-import path from "path"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
-import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
- 
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import { defineConfig } from "vite";
+
 export default defineConfig({
-  plugins: [react(), TanStackRouterVite()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-})
+	server: {
+		watch: {
+			usePolling: true,
+		},
+	},
+	plugins: [react(), TanStackRouterVite()],
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname, "./src"),
+		},
+	},
+});
