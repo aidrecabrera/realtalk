@@ -19,6 +19,7 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Textarea } from "@/components/ui/textarea";
 import { label_constant } from "@/constants/global";
 import { profileRoutes } from "@/constants/profileRoutes";
 import { cn } from "@/lib/utils";
@@ -57,12 +58,14 @@ function Profile() {
 				search: {
 					send: undefined,
 				},
+				replace: true,
 			});
 			return false;
 		}
 		return true;
 	};
 
+	console.log(option);
 	if (!profile) {
 		return <h1 className="animate-pulse">Loading...</h1>;
 	}
@@ -75,14 +78,13 @@ function Profile() {
 							src={image}
 							className="border-2 rounded-full w-36 h-36 border-border"
 						/>
-						<div className="flex flex-col gap-2">
+						<div className="flex flex-col items-center justify-center gap-2">
 							<h1 className="text-3xl font-bold">{entity_name}</h1>
 							<div className="flex flex-row gap-1">
-								<Badge className="text-xs">{"@" + "TEST"}</Badge>
-								<Badge
-									variant="outline"
-									className="text-xs border-primary text-primary"
-								>
+								<Badge className="text-xs bg-foreground text-background hover:text-foreground">
+									{"@" + handler}
+								</Badge>
+								<Badge variant="outline" className="text-xs">
 									{"Mapua Malayan Colleges Mindanao"}
 								</Badge>
 							</div>
@@ -120,28 +122,30 @@ function Profile() {
 }
 
 function SendDialogOptions() {
-	return profileRoutes.map(({ Icon, MessageSample, MessageType }, index) => {
-		return (
-			<Link
-				search={{
-					send: MessageType.toLowerCase(),
-				}}
-				key={index}
-			>
-				<DialogTrigger asChild>
-					<Card className="container max-w-lg">
-						<div className="flex flex-row items-center py-8">
-							<Icon size={50} className="mr-6" />
-							<div className="flex flex-col items-start">
-								<h1 className="font-medium text-body">{MessageType}</h1>
-								<p>{MessageSample}</p>
+	return profileRoutes.map(
+		({ Icon, MessageSample, MessageType, MessageColor }, index) => {
+			return (
+				<Link
+					search={{
+						send: MessageType.toLowerCase(),
+					}}
+					key={index}
+				>
+					<DialogTrigger asChild>
+						<Card className={cn("container max-w-lg", MessageColor)}>
+							<div className="flex flex-row items-center py-8">
+								<Icon size={50} className="mr-6" />
+								<div className="flex flex-col items-start">
+									<h1 className="font-medium text-body">{MessageType}</h1>
+									<p>{MessageSample}</p>
+								</div>
 							</div>
-						</div>
-					</Card>
-				</DialogTrigger>
-			</Link>
-		);
-	});
+						</Card>
+					</DialogTrigger>
+				</Link>
+			);
+		}
+	);
 }
 
 type TSendDialogProps = {
@@ -166,6 +170,7 @@ function SendDialog({
 				<DialogContent hideCloseButton className={cn("max-w-2xl", className)}>
 					<DialogHeader>
 						<DialogTitle>{label ? label : prevLabel}</DialogTitle>
+						<Message />
 						<DialogFooter>
 							<PrivacyStatement />
 						</DialogFooter>
@@ -187,14 +192,22 @@ function SendDialog({
 						Make changes to your profile here. Click save when you're done.
 					</DrawerDescription>
 				</DrawerHeader>
+				<Message />
 				<DrawerFooter className="pt-2">
-					<PrivacyStatement />
 					<DrawerClose asChild>
 						<Button variant="outline">Cancel</Button>
 					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>
+	);
+}
+
+function Message() {
+	return (
+		<div>
+			<MessageForm />
+		</div>
 	);
 }
 
@@ -206,6 +219,24 @@ function PrivacyStatement() {
 				<span className="text-sm">{label_constant.privacy_statement}</span>
 			</p>
 		</div>
+	);
+}
+
+function MessageForm() {
+	const { send: type } = Route.useSearch();
+	return (
+		<>
+			<Textarea
+				maxLength={300}
+				id="myTextArea"
+				autoComplete="off"
+				autoFocus
+				placeholder={
+					"Write your " + (type == "anonymous" ? "message" : type) + " here..."
+				}
+				className="h-[250px] text-lg font-normal text-left border-none rounded-lg outline-none resize-none font-brico ring-2 ring-ring ring-offset-4 focus-visible:ring-offset-4"
+			/>
+		</>
 	);
 }
 
