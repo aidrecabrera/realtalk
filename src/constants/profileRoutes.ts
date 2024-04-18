@@ -1,8 +1,16 @@
+import { Icon } from "@phosphor-icons/react";
 import { CalendarHeart } from "@phosphor-icons/react/dist/icons/CalendarHeart";
 import { SealQuestion } from "@phosphor-icons/react/dist/icons/SealQuestion";
 import { UserSound } from "@phosphor-icons/react/dist/icons/UserSound";
 
-export const profileRoutes = [
+export type TProfileRoute = {
+	Icon: Icon;
+	MessageType: string;
+	MessageSample: string;
+	MessageRoute: string;
+};
+
+export const profileRoutes: TProfileRoute[] = [
 	{
 		Icon: SealQuestion,
 		MessageType: "Anonymous",
