@@ -22,12 +22,12 @@
 		--secondary-foreground: 253 5% 29%;
 		--accent: 156 12.2% 91.96%;
 		--accent-foreground: 253 12% 22%;
-		--destructive: 0 70.37% 52.35%;
+		--destructive: 4 100% 64%;
 		--destructive-foreground: 0 0% 100%;
 		--ring: 214.25 99.2% 48.82%;
-		--sunglow: 202 97% 47%;
+		--sunglow: 44 100% 50%;
 		--sunglow-foreground: 198.14 0% 100%;
-		--ocean: 214 99% 49%;
+		--ocean: 216 100% 63%;
 		--ocean-foreground: 198.14 0% 75%;
 		--radius: 0.25rem;
 	}
@@ -52,7 +52,6 @@
 		--destructive: 0 70.37% 52.35%;
 		--destructive-foreground: 0 0% 100%;
 		--ring: 217.06 89.47% 29.8%;
-		--sunglow: 44 100% 50%;
 	}
 }
 
