@@ -17,7 +17,7 @@ export const profileRoutes: TProfileRoute[] = [
 		MessageType: "Anonymous",
 		MessageSample: "Share thoughts without revealing your identity!",
 		MessageRoute: "anonymous",
-		MessageColor: "bg-ocean",
+		MessageColor: "bg-primary",
 	},
 	{
 		Icon: CalendarHeart,

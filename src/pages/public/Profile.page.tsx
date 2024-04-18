@@ -49,6 +49,7 @@ function Profile() {
 	const navigate = useNavigate({ from: Route.fullPath });
 
 	const [prevLabel, setPrevLabel] = useState<string | undefined>();
+	// TODO: Write a short documentation about it
 	const setLabel = (open: boolean) => {
 		if (option) {
 			setPrevLabel((option as string).toTitleCase());
@@ -169,8 +170,12 @@ function SendDialog({
 				<SendDialogOptions />
 				<DialogContent hideCloseButton className={cn("max-w-2xl", className)}>
 					<DialogHeader>
-						<DialogTitle>{label ? label : prevLabel}</DialogTitle>
-						<Message />
+						<DialogTitle>
+							<h1 className="text-center">{label ? label : prevLabel}</h1>
+						</DialogTitle>
+						<div className="px-2 py-4">
+							<Message />
+						</div>
 						<DialogFooter>
 							<PrivacyStatement />
 						</DialogFooter>
@@ -187,13 +192,20 @@ function SendDialog({
 			</DrawerTrigger>
 			<DrawerContent className={cn(className)}>
 				<DrawerHeader className="text-left">
-					<DrawerTitle>{label ? label : prevLabel}</DrawerTitle>
+					<DrawerTitle>
+						<h1>{label ? label : prevLabel}</h1>
+					</DrawerTitle>
 					<DrawerDescription>
 						Make changes to your profile here. Click save when you're done.
 					</DrawerDescription>
 				</DrawerHeader>
-				<Message />
-				<DrawerFooter className="pt-2">
+				<div className="px-6 my-2">
+					<Message />
+				</div>
+				<DrawerFooter>
+					<DrawerClose asChild>
+						<Button variant="default">Send</Button>
+					</DrawerClose>
 					<DrawerClose asChild>
 						<Button variant="outline">Cancel</Button>
 					</DrawerClose>

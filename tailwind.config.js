@@ -79,6 +79,10 @@ module.exports = {
 					DEFAULT: "hsl(var(--ocean))",
 					foreground: "hsl(var(--ocean-foreground))",
 				},
+				leafy: {
+					DEFAULT: "hsl(var(--leafy))",
+					foreground: "hsl(var(--leafy-foreground))",
+				},
 			},
 			borderRadius: {
 				lg: "var(--radius)",
