@@ -8,6 +8,7 @@ export type TProfileRoute = {
 	MessageType: string;
 	MessageSample: string;
 	MessageRoute: string;
+	MessageColor: string;
 };
 
 export const profileRoutes: TProfileRoute[] = [
@@ -16,17 +17,20 @@ export const profileRoutes: TProfileRoute[] = [
 		MessageType: "Anonymous",
 		MessageSample: "Share thoughts without revealing your identity!",
 		MessageRoute: "anonymous",
+		MessageColor: "bg-ocean",
 	},
 	{
 		Icon: CalendarHeart,
 		MessageType: "Confession",
 		MessageSample: "Confess your deepest secrets and feelings!",
 		MessageRoute: "confession",
+		MessageColor: "bg-destructive",
 	},
 	{
 		Icon: UserSound,
 		MessageType: "Rant",
 		MessageSample: "Rant about anything bothering you!",
 		MessageRoute: "rant",
+		MessageColor: "bg-sunglow",
 	},
 ];
