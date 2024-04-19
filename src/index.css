@@ -12,7 +12,7 @@
 		--muted-foreground: 253 13% 37%;
 		--popover: 253 0% 100%;
 		--popover-foreground: 253 58% 0%;
-		--card: 56.6 0% 100%;
+		--card: 48 56% 98%;
 		--card-foreground: 0 0% 0%;
 		--border: 198.14 100% 8.43%;
 		--input: 198.14 100% 8.43%;
@@ -68,7 +68,7 @@
 		@apply w-full;
 	}
 	.page {
-		@apply container flex flex-col pt-4;
+		@apply container flex flex-col;
 	}
 	::selection {
 		@apply bg-ocean text-primary-foreground;

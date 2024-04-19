@@ -4,7 +4,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
 const navigationBarClass = cva(
-	"flex flex-row justify-between items-center py-8 w-full fixed h-24",
+	"flex flex-row justify-between items-center py-7 w-full fixed h-24",
 	{
 		variants: {
 			variant: {
@@ -50,4 +50,3 @@ Navigation.displayName = "Button";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export { Navigation, navigationBarClass };
-
